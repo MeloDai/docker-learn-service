@@ -14,15 +14,12 @@ public class MockDao {
     private List<Session> sessions = new ArrayList<>();
 
     private MockDao() {
-        users.add(new User("a", "b", Group.ADMIN));
-        users.add(new User("c", "d", Group.USER));
-
-        sessions.add(new Session("a", "Asteroid B-612"));
-        sessions.add(new Session("b", "the lamplighter"));
+        
     }
 
     public void addUser(String username, String password) {
-    	users.add(new User(username, password, Group.USER));
+    	User newUser = pwdHashSalt.setPwdHashSalt(new User(username, password, "", "", Group.USER));
+    	users.add(newUser);
     	String token = new TokenProcessor().generateToken("Vicky",true); 
     	sessions.add(new Session(username, token));
     }

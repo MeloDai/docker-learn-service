@@ -8,6 +8,7 @@ import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 @Path("auth")
 @PermitAll
@@ -21,17 +22,21 @@ public class account {
         MockDao dao = MockDao.getInstance();
 
         for (User user : dao.getUsers()) {
-            if (user.getUsername().equals(loginRequest.getUsername()) &&
-                    user.getPassword().equals(loginRequest.getPassword())) {
-                for (Session session : dao.getSessions()) {
-                    if (session.getName().equals(loginRequest.getUsername())) {
-                        return Response.ok(session.getToken()).build();
-                    }
-                }
+            if (user.getUsername().equals(loginRequest.getUsername())) {
+            	if(BCrypt.checkpw(loginRequest.getPassword(), user.getPwdHash())) {
+	                for (Session session : dao.getSessions()) {
+	                    if (session.getName().equals(loginRequest.getUsername())) {
+	                        return Response.ok(session.getToken()).build();
+	                    }
+	                }
+            	}
+            	else {
+            		return Response.status(Response.Status.UNAUTHORIZED).build();
+            	}
             }
         }
 
-        return Response.status(Response.Status.UNAUTHORIZED).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
     
     @POST

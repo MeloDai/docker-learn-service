@@ -1,7 +1,7 @@
 package melo.maven.learn.first.model;
 
 public class User {
-	private String username, password;
+	private String username, password, pwdHash, pwdSalt;
     private Group group;
 
     /*
@@ -10,9 +10,11 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, Group group) {
+    public User(String username, String password, String pwdSalt, String pwdHash, Group group) {
         this.username = username;
         this.password = password;
+        this.pwdHash = pwdHash;
+        this.pwdSalt = pwdSalt;
         this.group = group;
     }
 
@@ -30,6 +32,22 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    public String getPwdSalt() {
+    	return pwdSalt;
+    }
+    
+    public void setPwdSalt(String pwdSalt) {
+    	this.pwdSalt = pwdSalt;
+    }
+    
+    public String getPwdHash() {
+    	return pwdHash;
+    }
+    
+    public void setPwdHash(String pwdHash) {
+    	this.pwdHash = pwdHash;
     }
 
     public Group getGroup() {
